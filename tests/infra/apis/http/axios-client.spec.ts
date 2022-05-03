@@ -11,27 +11,30 @@ class AxiosHttpClient {
 }
 
 describe('AxiosHttpClient', () => {
+  let sut: AxiosHttpClient
+  let fakeAxios: jest.Mocked<typeof axios>
+  let url: string
+  let params: object
+
+  beforeAll(() => {
+    url = 'any_string'
+    params = { any: 'any' }
+    fakeAxios = axios as jest.Mocked<typeof axios>
+  })
+
+  beforeEach(() => {
+    sut = new AxiosHttpClient()
+  })
+
   // Quando um componente pode implementar mais de uma classe 
   // é uma boa prática separar cada implementação em describes diferentes
   // assim não fica misturado, mas fazer isso antes da hora infringe o principio do
   // Keep it simple.
   describe('get', () => {
     it('should call get with correct params', async () => {
-      const fakeAxios = axios as jest.Mocked<typeof axios>
-      const sut = new AxiosHttpClient()
+      await sut.get({ url, params })
 
-      await sut.get({
-        url: 'any_url',
-        params: {
-          any: 'any'
-        }
-      })
-
-      expect(fakeAxios.get).toHaveBeenCalledWith('any_url', {
-        params: {
-          any: 'any'
-        }
-      })
+      expect(fakeAxios.get).toHaveBeenCalledWith(url, { params })
       expect(fakeAxios.get).toHaveBeenCalledTimes(1)
     })
   })
